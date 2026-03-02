@@ -1,0 +1,221 @@
+================================================================================
+                    FESTIVAL CONTENT MAKER - DEPLOYMENT GUIDE
+================================================================================
+
+QUICK ANSWER: How to Deploy This Project?
+------------------------------------------
+
+OPTION 1: AUTOMATED DEPLOYMENT (Easiest)
+-----------------------------------------
+1. Complete prerequisites (see below)
+2. Run: deploy.bat
+3. Follow the prompts
+4. Done!
+
+OPTION 2: MANUAL DEPLOYMENT
+----------------------------
+1. Deploy Backend:
+   cd backend
+   serverless deploy
+
+2. Deploy Frontend:
+   cd frontend
+   vercel --prod
+
+OPTION 3: TRADITIONAL SERVER
+-----------------------------
+See DEPLOYMENT.md for VPS/Docker deployment
+
+
+PREREQUISITES (Must Complete First!)
+================================================================================
+
+1. AWS ACCOUNT
+   - Sign up: https://aws.amazon.com
+   - Enable Bedrock (Claude AI)
+   - Get access keys
+
+2. VERCEL ACCOUNT
+   - Sign up: https://vercel.com (free)
+
+3. INSTALL TOOLS
+   - Node.js 18+: https://nodejs.org
+   - AWS CLI: https://aws.amazon.com/cli/
+   - Serverless: npm install -g serverless
+   - Vercel CLI: npm install -g vercel
+
+4. CONFIGURE AWS
+   aws configure
+   (Enter your AWS access key and secret)
+
+
+DETAILED STEP-BY-STEP
+================================================================================
+
+STEP 1: AWS SETUP (20 minutes)
+-------------------------------
+1. Create AWS account at https://aws.amazon.com
+2. Go to IAM → Users → Create user
+3. Attach these policies:
+   - AWSLambdaFullAccess
+   - AmazonAPIGatewayAdministrator
+   - AmazonDynamoDBFullAccess
+4. Create access key
+5. Save Access Key ID and Secret
+
+6. Configure AWS CLI:
+   aws configure
+   AWS Access Key ID: [your key]
+   AWS Secret Access Key: [your secret]
+   Default region: us-east-1
+   Default output: json
+
+7. Enable Bedrock:
+   - Go to AWS Console → Bedrock
+   - Click "Model access"
+   - Enable "Claude 3 Sonnet"
+   - Wait for approval
+
+
+STEP 2: DEPLOY BACKEND (10 minutes)
+------------------------------------
+cd backend
+npm install
+serverless deploy
+
+IMPORTANT: Copy the API Gateway URL from the output!
+Example: https://abc123.execute-api.us-east-1.amazonaws.com/dev/api
+
+
+STEP 3: DEPLOY FRONTEND (10 minutes)
+-------------------------------------
+cd frontend
+npm install
+
+# Create .env.local with your API URL
+echo NEXT_PUBLIC_API_URL=https://your-api-url.amazonaws.com/dev/api > .env.local
+
+# Login to Vercel
+vercel login
+
+# Deploy
+vercel --prod
+
+# Set environment variable in Vercel dashboard:
+# 1. Go to vercel.com/dashboard
+# 2. Select your project
+# 3. Settings → Environment Variables
+# 4. Add NEXT_PUBLIC_API_URL with your API URL
+# 5. Redeploy: vercel --prod
+
+
+STEP 4: TEST (5 minutes)
+-------------------------
+1. Open your Vercel URL
+2. Select "Diwali" festival
+3. Choose "English" language
+4. Select "Friendly" tone
+5. Click "Generate Content"
+6. Verify content appears
+
+DONE! Your app is live!
+
+
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Bedrock access denied"
+Solution: Enable Bedrock in AWS Console → Bedrock → Model access
+
+Problem: "Deployment failed"
+Solution: Check AWS credentials with: aws sts get-caller-identity
+
+Problem: "API request failed"
+Solution: Verify NEXT_PUBLIC_API_URL in Vercel dashboard matches your API URL
+
+Problem: "Module not found"
+Solution: Delete node_modules and run npm install again
+
+
+COSTS
+================================================================================
+
+AWS Lambda: Free tier includes 1M requests/month
+AWS Bedrock: ~$0.003 per 1K tokens
+Vercel: Free tier includes 100GB bandwidth
+
+Estimated monthly cost for low traffic: $5-10
+
+
+DOCUMENTATION FILES
+================================================================================
+
+For more details, see:
+
+- DEPLOYMENT.md                  - Complete deployment guide
+- DEPLOYMENT_STEPS.md            - Visual step-by-step guide
+- PRE_DEPLOYMENT_CHECKLIST.md    - Checklist before deploying
+- SETUP.md                       - Local development setup
+- API.md                         - API documentation
+- QUICK_REFERENCE.md             - Quick command reference
+
+
+SUPPORT
+================================================================================
+
+AWS Issues:
+- Check CloudWatch logs in AWS Console
+- AWS Support: https://aws.amazon.com/support
+
+Vercel Issues:
+- Check deployment logs in Vercel dashboard
+- Vercel Docs: https://vercel.com/docs
+
+General Issues:
+- Review error messages carefully
+- Check all prerequisites are met
+- Verify environment variables
+
+
+QUICK COMMANDS
+================================================================================
+
+# Check if tools are installed
+node --version
+aws --version
+serverless --version
+vercel --version
+
+# Deploy backend
+cd backend && serverless deploy
+
+# Deploy frontend
+cd frontend && vercel --prod
+
+# View backend logs
+serverless logs -f generateContent
+
+# Remove deployment
+serverless remove
+
+
+NEXT STEPS AFTER DEPLOYMENT
+================================================================================
+
+1. Test all features thoroughly
+2. Share URL with users
+3. Monitor AWS CloudWatch logs
+4. Check Vercel analytics
+5. Set up billing alerts
+6. Plan feature enhancements
+
+
+================================================================================
+                              THAT'S IT!
+================================================================================
+
+Your Festival Content Maker is now deployed and ready to use!
+
+For questions or issues, check the documentation files listed above.
+
+Good luck! 🎉
